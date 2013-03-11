@@ -7,7 +7,11 @@ public class JacobianRegression implements Regression {
 
 	@Override
 	public Matrix doRegression(ArmState query, ArmState[] vicinity) {
-		return getAnaliticJacobian(query.q);
+		Matrix J = getAnaliticJacobian(query.q);
+		Matrix J_inv = J.inverse();
+		Matrix dthau = J_inv.times(query.dx.transpose()).transpose();
+
+		return dthau;
 	}
 
 	public Matrix getAnaliticJacobian(Matrix thau) {

@@ -8,10 +8,12 @@ import java.util.Observable;
 import javax.swing.JFrame;
 
 import model.CompleteArm;
-import utils.JamaU;
 import viewer.JArm2D;
 import viewer.JArmLabel;
 import Jama.Matrix;
+import appdev.lowlevel.GenericLLCmd;
+import appdev.lowlevel.LowLevelCommand;
+import appdev.regression.JacobianRegression;
 
 /**
  * Bras simplifie controle par variation des angles des membres directement.
@@ -22,13 +24,11 @@ import Jama.Matrix;
  */
 public class SimpleArmGraphic extends Observable {
 
-	double VELOCITY = 0.01;
-	double GOAL_PRECISION_2 = 0.01;
+	LowLevelCommand _llcmd;
 
-	Matrix angle_courant;
-	Matrix endpos_courant;
 	/** But haut niveau */
 	Matrix _goal;
+	double GOAL_PRECISION_2 = 0.01;
 
 	/** Fenetre principale de l'application */
 	JFrame _frame;
@@ -40,8 +40,7 @@ public class SimpleArmGraphic extends Observable {
 
 	public SimpleArmGraphic() {
 
-		angle_courant = _arm.getArm().getArmPos().copy();
-		endpos_courant = JamaU.Point3dToMatrix(_arm.getArm().getArmEndPoint());
+		_llcmd = new GenericLLCmd(_arm, new JacobianRegression());
 		_goal = genereGoalAleatoir();
 
 		// Setup in resting position
@@ -105,44 +104,11 @@ public class SimpleArmGraphic extends Observable {
 		}
 	}
 
-	public Matrix getAnaliticJacobian(Matrix thau) {
-		// TODO: remplacer les valeurs en dures par des appels vers CompleteArm
-		Matrix J = new Matrix(3, 2, 0.0);
-		J.set(0,
-				0,
-				-0.30 * Math.sin(thau.get(0, 0)) - 0.35
-						* Math.sin(thau.get(0, 0) + thau.get(0, 1)));
-		J.set(1,
-				0,
-				0.30 * Math.cos(thau.get(0, 0)) + 0.35
-						* Math.cos(thau.get(0, 0) + thau.get(0, 1)));
-		J.set(0, 1, -0.35 * Math.sin(thau.get(0, 0) + thau.get(0, 1)));
-		J.set(1, 1, 0.35 * Math.cos(thau.get(0, 0) + thau.get(0, 1)));
-		return J;
-	}
-
-	public void applique_dq(Matrix dq) {
-		angle_courant = _arm.getArm().getArmPos().plus(dq);
-
-		_arm.setup(angle_courant.get(0, 0) % (2.0 * Math.PI),
-				angle_courant.get(0, 1) % (2.0 * Math.PI));
-	}
-
 	protected void step() {
 
 		majGoal();
 
-		Matrix dx = _goal.minus(endpos_courant);
-		dx.timesEquals(VELOCITY / dx.norm2()); // normalisation
-
-		Matrix angle_avant_mouvement = _arm.getArm().getArmPos();
-		Matrix J = getAnaliticJacobian(angle_avant_mouvement);
-		Matrix J_inv = J.inverse();
-		Matrix dthau = J_inv.times(dx.transpose()).transpose();
-
-		applique_dq(dthau);
-
-		endpos_courant = _arm.getArm().getArmEndPointMatrix();
+		_llcmd.reachGoal(_goal, 1, 0.01);
 
 		System.out.println(_arm.toString());
 

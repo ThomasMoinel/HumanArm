@@ -1,5 +1,6 @@
 package appdev;
 
+import model.Arm;
 import utils.JamaU;
 import Jama.Matrix;
 
@@ -25,6 +26,15 @@ public class ArmState {
 		super();
 		this.q = new Matrix(1,2);
 		this.dq = new Matrix(1,2);
+		this.com = new Matrix(1,8);
+		this.dx = new Matrix(1,3);
+		this.competence = .0;
+	}
+	
+	public ArmState(Arm arm) {
+		super();
+		this.q = arm.getArmPos();
+		this.dq = arm.getArmSpeed();
 		this.com = new Matrix(1,8);
 		this.dx = new Matrix(1,3);
 		this.competence = .0;
