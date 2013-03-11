@@ -9,6 +9,13 @@ import appdev.regression.LWR;
 import appdev.regression.NearestNeighborRegression;
 import appdev.regression.Regression;
 
+/**
+ * Genere en sortie standart des données de régression pouvant être affichees 
+ * avec gnuplot ou autre
+ * 
+ * @author moinel
+ *
+ */
 public class TestRegression {
 
 	static DecimalFormat df5_4 = new DecimalFormat("0.000");
@@ -26,6 +33,8 @@ public class TestRegression {
 		app.add(10);
 
 		ArmState query = new ArmState();
+
+		System.out.println("#x y nearest LWR");
 		for (double x = 0.0; x < 1.001; x += 0.01) {
 
 			query.q.set(0, 0, x);
