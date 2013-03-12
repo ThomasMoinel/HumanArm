@@ -13,7 +13,10 @@ import viewer.JArmLabel;
 import Jama.Matrix;
 import appdev.lowlevel.GenericLLCmd;
 import appdev.lowlevel.LowLevelCommand;
+import appdev.lowlevel.SSAlgorithm;
 import appdev.regression.JacobianRegression;
+import appdev.regression.LWR;
+import appdev.regression.NearestNeighborRegression;
 
 /**
  * Bras simplifie controle par variation des angles des membres directement.
@@ -41,6 +44,9 @@ public class SimpleArmGraphic extends Observable {
 	public SimpleArmGraphic() {
 
 		_llcmd = new GenericLLCmd(_arm, new JacobianRegression());
+		// _llcmd = new SSAlgorithm(_arm, new LWR());
+		// _llcmd = new SSAlgorithm(_arm, new NearestNeighborRegression());
+
 		_goal = genereGoalAleatoir();
 
 		// Setup in resting position
