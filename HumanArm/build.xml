@@ -46,7 +46,11 @@ Java model of a simple HumanArm as used by Li06, Martin11, etc
 	<target name="rc" description="" depends="compile">
 		<java classname="example.ArmConsole" fork="true" classpathref="classpath"/>
 	</target>
-<target name="rg" description="" depends="compile">
+	<target name="rg" description="" depends="compile">
 		<java classname="example.ArmGraphic" fork="true" classpathref="classpath"/>
 	</target>
+	<target name="sag" description="" depends="compile">
+		<java classname="example.SimpleArmGraphic" fork="true" classpathref="classpath"/>
+	</target>
+
 </project>
