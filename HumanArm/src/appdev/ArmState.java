@@ -40,6 +40,24 @@ public class ArmState {
 		this.competence = .0;
 	}
 	
+	public ArmState(Arm arm, Matrix dx) {
+		super();
+		this.q = arm.getArmPos();
+		this.dq = arm.getArmSpeed();
+		this.com = new Matrix(1,8);
+		this.dx = dx;
+		this.competence = .0;
+	}
+	
+	public ArmState(Arm arm, Matrix dx, Matrix com) {
+		super();
+		this.q = arm.getArmPos();
+		this.dq = arm.getArmSpeed();
+		this.com = com;
+		this.dx = dx;
+		this.competence = .0;
+	}
+	
 	public ArmState(Matrix q, Matrix dq) {
 		super();
 		assert(q.getRowDimension() == 1 && q.getColumnDimension() == 2);
