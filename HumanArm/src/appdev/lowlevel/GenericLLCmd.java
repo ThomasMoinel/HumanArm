@@ -3,6 +3,7 @@ package appdev.lowlevel;
 import model.CompleteArm;
 import Jama.Matrix;
 import appdev.ArmState;
+import appdev.cmdGen.SimpleCommandApplicator;
 import appdev.regression.Regression;
 
 public class GenericLLCmd extends LowLevelCommand {
@@ -10,7 +11,7 @@ public class GenericLLCmd extends LowLevelCommand {
 	static double VELOCITY = 0.005;
 
 	public GenericLLCmd(CompleteArm arm, Regression regression) {
-		super(arm, regression);
+		super(arm, regression, new SimpleCommandApplicator());
 	}
 
 	@Override

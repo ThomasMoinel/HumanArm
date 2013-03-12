@@ -11,6 +11,8 @@ import model.CompleteArm;
 import viewer.JArm2D;
 import viewer.JArmLabel;
 import Jama.Matrix;
+import appdev.cmdGen.CommandApplicator;
+import appdev.cmdGen.SimpleCommandApplicator;
 import appdev.lowlevel.GenericLLCmd;
 import appdev.lowlevel.LowLevelCommand;
 import appdev.lowlevel.SSAlgorithm;
@@ -44,8 +46,8 @@ public class SimpleArmGraphic extends Observable {
 	public SimpleArmGraphic() {
 
 		_llcmd = new GenericLLCmd(_arm, new JacobianRegression());
-		// _llcmd = new SSAlgorithm(_arm, new LWR());
-		// _llcmd = new SSAlgorithm(_arm, new NearestNeighborRegression());
+		// _llcmd = new SSAlgorithm(_arm, new LWR(),new SimpleCommandApplicator());
+		// _llcmd = new SSAlgorithm(_arm, new NearestNeighborRegression(),new SimpleCommandApplicator());
 
 		_goal = genereGoalAleatoir();
 

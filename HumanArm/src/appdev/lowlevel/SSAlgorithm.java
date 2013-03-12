@@ -9,6 +9,7 @@ import utils.dataStructures.trees.thirdGenKD.SquareEuclideanDistanceFunction;
 import Jama.Matrix;
 import appdev.ArmState;
 import appdev.cmdGen.CmdGenRnd;
+import appdev.cmdGen.CommandApplicator;
 import appdev.cmdGen.CommandGenerator;
 import appdev.regression.Regression;
 
@@ -46,8 +47,8 @@ public class SSAlgorithm extends LowLevelCommand {
 	
 	CommandGenerator _generator = new CmdGenRnd();
 	
-	public SSAlgorithm(CompleteArm model, Regression reg) {
-		super(model, reg);
+	public SSAlgorithm(CompleteArm model, Regression reg, CommandApplicator ap) {
+		super(model, reg, ap);
 		
 		ArmState zero = new ArmState();
 		this._data = new KdTree<ArmState>(zero.getDimmension());
@@ -141,8 +142,7 @@ public class SSAlgorithm extends LowLevelCommand {
 		Matrix dq = _arm.getArm().getArmSpeed().copy();
 		Matrix dx = _arm.getArm().getArmEndPointMatrix();
 		
-		//_arm.applyCommand(command, _dt);
-		applyCommandSimple(command);
+		_applicator.applyCommand(_arm, command, _dt);
 		
 		dx = _arm.getArm().getArmEndPointMatrix().minusEquals(dx);
 
@@ -150,12 +150,5 @@ public class SSAlgorithm extends LowLevelCommand {
 		return s;
 	}
 
-	private void applyCommandSimple(Matrix command) {
-
-		Matrix angle_courant = _arm.getArm().getArmPos().plus(command);
-
-		_arm.setup(angle_courant.get(0, 0) % (2.0 * Math.PI),
-				angle_courant.get(0, 1) % (2.0 * Math.PI));
-	}
 }
 	
